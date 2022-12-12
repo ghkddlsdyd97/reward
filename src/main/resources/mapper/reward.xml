@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.musinsa.reward.dao.RewardDAO">
+	<resultMap id="rewardResultMap" type="com.musinsa.reward.model.RewardDTO">
+		<result property="rewardDt"			column="REWARD_DT"			jdbcType="VARCHAR"/>
+		<result property="rewardContent"	column="REWARD_CONTENT"		jdbcType="VARCHAR"/>
+		<result property="rewardPointAmt"	column="REWARD_POINT_AMT"	jdbcType="DECIMAL"/>
+		<result property="rewardUserCnt"	column="REWARD_USER_CNT"	jdbcType="DECIMAL"/>
+		<result property="instDate"			column="INST_DATE"			jdbcType="DATE"/>
+		<result property="updtDate"			column="UPDT_DATE"			jdbcType="DATE"/>
+	</resultMap>
+
+	<resultMap id="rewardPayResultMap" type="com.musinsa.reward.model.RewardPayDTO">
+		<result property="userId"			column="USER_ID"			jdbcType="VARCHAR"/>
+		<result property="userName"			column="USER_NAME"			jdbcType="VARCHAR"/>
+		<result property="rewardPayDt"		column="REWARD_PAY_DT"		jdbcType="VARCHAR"/>
+		<result property="rewardPayTm"		column="REWARD_PAY_TM"		jdbcType="VARCHAR"/>
+		<result property="rewardPointAmt"	column="REWARD_POINT_AMT"	jdbcType="DECIMAL"/>
+		<result property="rewardConCnt"		column="REWARD_CON_CNT"		jdbcType="DECIMAL"/>
+		<result property="rewardConAmt"		column="REWARD_CON_AMT"		jdbcType="DECIMAL"/>
+		<result property="rewardTotalAmt"	column="REWARD_TOTAL_AMT"	jdbcType="DECIMAL"/>
+	</resultMap>
+	
+	<select id="selectExistReward" resultMap="rewardResultMap">
+		SELECT /* selectExistReward */
+			   REWARD_DT
+			 , REWARD_CONTENT
+			 , REWARD_POINT_AMT
+			 , REWARD_USER_CNT
+			 , INST_DATE
+			 , UPDT_DATE
+		FROM TB_REWARD
+		WHERE REWARD_DT = FORMATDATETIME(NOW(),'yyyyMMdd')
+	</select>
+	
+	<select id="selectExistRewardPay" resultType="int" parameterType="RewardPayDTO">
+		SELECT /* selectExistRewardPay */
+			   COUNT(*)
+		FROM TB_REWARD_PAY
+		WHERE REWARD_PAY_DT = FORMATDATETIME(NOW(),'yyyyMMdd')
+		  AND USER_ID = #{userId}
+	</select>
+	
+	<select id="selectRewardPayEnd" resultType="int">
+		SELECT /* selectRewardPayEnd */
+			   COUNT(*)
+		FROM TB_REWARD_PAY
+		WHERE REWARD_PAY_DT = FORMATDATETIME(NOW(),'yyyyMMdd')
+	</select>
+	
+	<select id="selectRewardConInfo" resultMap="rewardPayResultMap" parameterType="RewardPayDTO">
+		SELECT /* selectRewardConInfo */
+			   IFNULL(TR.REWARD_CON_CNT,0) AS REWARD_CON_CNT
+		FROM TB_MEMBER TM, TB_REWARD_PAY TR
+		WHERE TM.USER_ID = TR.USER_ID
+		  AND TM.USER_ID = #{userId}
+		  AND TR.REWARD_PAY_DT = FORMATDATETIME(NOW()-1,'yyyyMMdd')
+	</select>
+	
+	<insert id="insertRewardPay" parameterType="RewardPayDTO">
+		INSERT INTO TB_REWARD_PAY(
+			USER_ID
+		  , REWARD_PAY_DT
+		  , REWARD_PAY_TM
+		  , REWARD_POINT_AMT
+		  , REWARD_CON_CNT
+		  , REWARD_CON_AMT
+		  , REWARD_TOTAL_AMT
+		) 
+		VALUES(
+			#{userId}
+		  , #{rewardPayDt}
+		  , FORMATDATETIME(NOW(),'HHmmss')
+		  , #{rewardPointAmt}
+		  , #{rewardConCnt}
+		  , #{rewardConAmt}
+		  , #{rewardTotalAmt}
+		)
+	</insert>
+	
+	<select id="selectRewardList" resultMap="rewardResultMap">
+		SELECT /* selectRewardList */
+			   REWARD_DT
+			 , REWARD_CONTENT
+			 , REWARD_POINT_AMT
+			 , REWARD_USER_CNT
+			 , INST_DATE
+			 , UPDT_DATE
+		FROM TB_REWARD
+		ORDER BY REWARD_DT
+	</select>
+	
+	<select id="selectRewardPayList" resultMap="rewardPayResultMap" parameterType="map">
+		SELECT /* selectRewardPayList */
+			   TR.USER_ID
+			 , TM.USER_NAME 
+			 , TR.REWARD_PAY_DT
+			 , TR.REWARD_PAY_TM
+			 , TR.REWARD_POINT_AMT
+			 , TR.REWARD_CON_CNT
+			 , TR.REWARD_CON_AMT
+			 , TR.REWARD_TOTAL_AMT
+		FROM TB_REWARD_PAY TR, TB_MEMBER TM
+		WHERE TR.USER_ID = TM.USER_ID
+		  AND TR.REWARD_PAY_DT = #{searchDt}
+		<if test="searchUserId != null and searchUserId != ''">
+		  AND TR.USER_ID = #{searchUserId}
+		</if>
+		<if test="searchOrder == 'asc'">
+			ORDER BY TR.REWARD_PAY_TM ASC
+		</if>
+		<if test="searchOrder == 'desc'">
+			ORDER BY TR.REWARD_PAY_TM DESC
+		</if>
+	</select>
+</mapper>

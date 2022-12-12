@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.musinsa.reward.dao.MainDAO">
+	<resultMap id="memberResultMap" type="com.musinsa.reward.model.MemberDTO">
+		<result property="userId"	column="USER_ID"	jdbcType="VARCHAR"/>
+		<result property="userPwd"	column="USER_PWD"	jdbcType="VARCHAR"/>
+		<result property="userName"	column="USER_NAME"	jdbcType="VARCHAR"/>
+		<result property="phoneNum"	column="PHONE_NUM"	jdbcType="VARCHAR"/>
+		<result property="useYn"	column="USE_YN" 	jdbcType="VARCHAR"/>
+		<result property="point"	column="POINT"	 	jdbcType="DECIMAL"/>
+		<result property="instDate"	column="INST_DATE"	jdbcType="DATE"/>
+		<result property="updtDate"	column="UPDT_DATE"	jdbcType="DATE"/>
+	</resultMap>
+
+	<select id="selectExistUser" resultType="int" parameterType="MemberDTO">
+		SELECT /* selectExistUser */
+				COUNT(*)
+		FROM TB_MEMBER
+		WHERE USER_ID = #{userId}
+		  AND USER_PWD = #{userPwd}
+	</select>
+	
+	<select id="selectUserInfo" resultMap="memberResultMap" parameterType="MemberDTO">
+		SELECT /* selectUserInfo */
+				USER_ID
+			  , USER_PWD
+			  , USER_NAME
+			  , PHONE_NUM
+			  , USE_YN
+			  , IFNULL(POINT,0) AS POINT
+			  , INST_DATE
+			  , UPDT_DATE
+		FROM TB_MEMBER
+		WHERE USER_ID = #{userId}
+	</select> 
+	
+	<update id="updateUserPoint" parameterType="RewardPayDTO">
+		UPDATE TB_MEMBER
+		SET POINT = POINT + #{rewardTotalAmt}
+		  , UPDT_DATE = NOW()
+		WHERE USER_ID = #{userId}
+	</update>
+</mapper>

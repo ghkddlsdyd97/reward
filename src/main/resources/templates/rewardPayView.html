@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lagn="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta charset="UTF-8">
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<link th:href="@{/css/main.css}" rel="stylesheet" />
+<title>MUSINSA</title>
+</head>
+<body>
+	<div id="listTable" class="container">
+		<th:block th:replace="header :: headerFragment"></th:block>
+		<div class="reward-content">
+			<div class="reward-div">
+				<span class="reward-text">보상지급 내역</span></br></br>
+				<div class="inline-div">
+					<span class="search-span">날짜 : </span><input type="date" id="searchDt" name="searchDt" class="search-input" th:value="${searchDt}">
+				</div>
+				<div class="inline-div">
+					<span class="search-span">아이디 : </span><input type="text" id="searchUserId" name="searchUserId" class="search-input" th:value="${searchUserId}">
+				</div>
+				<div class="inline-div">
+					<span class="search-span">정렬 : </span>
+					<select id="searchOrder" name="searchOrder" class="search-input" th:value="${searchOrder}">
+						<option value="asc" th:selected="${searchOrder} == 'asc'">오름차순</option>
+						<option value="desc" th:selected="${searchOrder} == 'desc'">내림차순</option>
+					</select>
+				</div>
+				</br></br>
+				<a class="btn-reward" onclick="selectRewardPayList()">조회하기</a>
+				</br></br></br>
+				<table id="rewardPayTable" class="list-table">
+					<thead>
+						<tr>
+							<th>지급일자</th>
+							<th>지급시간</th>
+							<th>아이디</th>
+							<th>이름</th>
+							<th>보상 포인트</th>
+							<th>연속보상 횟수</th>
+							<th>연속보상 포인트</th>
+							<th>총 지급 포인트</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="list : ${rewardPayList}">
+							<td th:text="${#strings.substring(list.rewardPayDt,0,4) + '-' 
+							             + #strings.substring(list.rewardPayDt,4,6) + '-' 
+							             + #strings.substring(list.rewardPayDt,6,8)}"></td>
+							<td th:text="${#strings.substring(list.rewardPayTm,0,2) + ':' 
+							             + #strings.substring(list.rewardPayTm,2,4) + ':' 
+							             + #strings.substring(list.rewardPayTm,4,6)}"></td>
+							<td th:text="${list.userId}"></td>
+							<td th:text="${list.userName}"></td>
+							<td th:text="${list.rewardPointAmt + '포인트'}"></td>
+							<td th:text="${list.rewardConCnt + '회'}"></td>
+							<td th:text="${list.rewardConAmt + '포인트'}"></td>
+							<td th:text="${#numbers.formatInteger(list.rewardTotalAmt, 3, 'COMMA') + '포인트'}"></td>
+						</tr>
+					</tbody>
+				</table>
+				</br>
+				<a th:href="@{/main}" class="btn-pay">돌아가기</a>
+			</div>
+		</div>
+	</div>
+</body>
+<script th:inline="javascript">
+$(function(){
+	today = new Date();
+	today = today.toISOString().slice(0, 10);
+	$("#searchDt").val(today);
+	
+	selectRewardPayList();
+});
+
+function selectRewardPayList(){
+	var searchDt = $("#searchDt").val();
+	var searchUserId = $("#searchUserId").val();
+	var searchOrder = $("#searchOrder option:selected").val();
+	
+	$.ajax({
+		url: '/rewardPayList.do',
+		type: 'POST',
+		data: {'searchDt':searchDt,
+			   'searchUserId':searchUserId,
+			   'searchOrder':searchOrder},
+	})
+	.done(function(fragment){
+		$('#listTable').replaceWith(fragment);
+	});
+}
+
+</script>
+</html>

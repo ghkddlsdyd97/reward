@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lagn="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta charset="UTF-8">
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<link th:href="@{/css/main.css}" rel="stylesheet" />
+<title>MUSINSA</title>
+</head>
+<body>
+	<div class="container">
+		<th:block th:replace="header :: headerFragment"></th:block>
+		<div class="reward-content">
+			<div class="reward-div">
+				<span class="reward-text">보상내역</span></br></br></br>
+				<table id="rewardTable" class="list-table">
+					<thead>
+						<tr>
+							<th>보상일자</th>
+							<th>보상내용</th>
+							<th>보상 포인트</th>
+							<th>선착순 인원</th>
+						</tr>
+					</thead>
+					<tbody th:if="${rewardList != null}">
+						<tr th:each="list : ${rewardList}">
+							<td th:text="${#strings.substring(list.rewardDt,0,4) + '-' 
+							             + #strings.substring(list.rewardDt,4,6) + '-' 
+							             + #strings.substring(list.rewardDt,6,8)}"></td>
+							<td th:text="${list.rewardContent}"></td>
+							<td th:text="${#numbers.formatInteger(list.rewardPointAmt, 3, 'COMMA') + '포인트'}"></td>
+							<td th:text="${list.rewardUserCnt + '명'}"></td>
+						</tr>
+					</tbody>
+					<tbody th:if="${rewardList == null}">
+						<tr>
+							<td colspan="4">보상내역이 없습니다.</td>
+						</tr>
+					</tbody>
+				</table>
+				</br>
+				<a th:href="@{/main}" class="btn-pay">돌아가기</a>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

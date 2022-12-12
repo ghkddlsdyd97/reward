@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<link th:href="@{/css/main.css}" rel="stylesheet" />
+<title>MUSINSA</title>
+</head>
+<body>
+	<div class="container">
+		<div class="header">
+			<a class="header-font" th:href="@{/main}">MUSINSA</a>
+		</div>
+		<div class="content">
+			<span class="span-login">로그인</span>
+			</br></br>
+			
+			<form th:action="@{/login.do}" th:object="${member}" id="form" method="post">
+				ID : <input class="login-input" type="text" id="userId" name="userId" placeholder="아이디를 입력하세요."></br></br>
+				PW : <input class="login-input" type="password" id="userPwd" name="userPwd" placeholder="비밀번호를 입력하세요."></br></br>
+				<button type="submit" class="login-btn">로그인</button></br></br>
+				<span class="error-span" th:if="${message != null}" th:text="${message}" style="color:red;"></span>
+			</form>
+		</div>
+	</div>
+</body>
+</html>
