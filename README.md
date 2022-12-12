@@ -41,3 +41,18 @@
 10) java -jar reward.jar 명령어 실행
 11) 웹 브라우저 localhost:8090 접속
 ```
+5. DB 정보
+```
+1) 로그인
+   > ID: test1 ~ test15
+   > PW: 1234
+```
+6. 개발환경
+```
+> Tool: STS4
+> FrameWork: Spring boot 2.7.X
+> Build: Maven
+> Java Version: 1.8
+> Front-end: Tymeleaf
+> Packaging: jar
+```
