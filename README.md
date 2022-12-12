@@ -46,6 +46,10 @@
 1) 로그인
    > ID: test1 ~ test15
    > PW: 1234
+2) 보상 내역
+   > 임의 데이터 생성
+3) 보상 지급
+   > 임의 데이터 
 ```
 6. 개발환경
 ```
@@ -55,4 +59,5 @@
 > Java Version: 1.8
 > Front-end: Tymeleaf
 > Packaging: jar
+> DB: H2
 ```
