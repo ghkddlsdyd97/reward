@@ -59,5 +59,6 @@
 > Java Version: 1.8
 > Front-end: Tymeleaf
 > Packaging: jar
+> ORM: Mybatis
 > DB: H2
 ```
