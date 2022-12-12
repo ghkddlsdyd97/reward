@@ -25,4 +25,19 @@
 3) 보상 지급 시 동시성 제어 처리 - 미구현
 ```
 4. 실행 방법
-
+```
+1) STS 실행
+2) Window - Show View - Other - Git - Git Repositories 선택
+3) Clone a Git Repository
+   > URI: https://github.com/ghkddlsdyd97/reward.git
+   > Host: github.com
+   > Repository path: /ghkddlsdyd97/reward.git
+4) Next -> main 브런치 선택 -> Next -> Directory 선택 -> Finish
+5) Git Repositories -> reward 우클릭 -> Import Projects -> Finish
+6) 생성된 reward 프로젝트 우클릭 -> Run As -> Maven build
+7) 해당 디렉토리 아래 reward.jar 파일 생성 확인
+8) cmd 접속
+9) cd 디렉토리명
+10) java -jar reward.jar 명령어 실행
+11) 웹 브라우저 localhost:8090 접속
+```
