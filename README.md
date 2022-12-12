@@ -21,6 +21,8 @@
 3. 추가 구현
 ```
 1) Unit test 및 Integration test 작성 - 미구현
-2) Front-end 페이지 구현 - 구현
+2) Front-end 페이지 구현 - 구현 (tymeleaf 사용)
 3) 보상 지급 시 동시성 제어 처리 - 미구현
 ```
+4. 실행 방법
+
